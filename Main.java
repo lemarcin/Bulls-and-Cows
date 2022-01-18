@@ -1,6 +1,7 @@
 package bullscows;
 
 import java.util.Scanner;
+import java.util.Random;
 
 public class Main {
 
@@ -12,24 +13,22 @@ public class Main {
             System.out.printf("Error: can't generate a secret number with a length of %d because there aren't enough unique digits.", length);
         } else {
 
-            int secretCode = secretCode(length);
-            int[] secret = new int[length];
-            int[] answer = new int[length];
+            String secretCode = secretCode(length);
+            char[] secret = new char[length];
+            char[] answer = new char[length];
             System.out.println("Okay, let's start a game!");
             int bulls = 0;
             int turn = 1;
-            for (int i = length - 1; i > -1; i--) {
-                secret[i] = secretCode % 10;
-                secretCode /= 10;
+            for (int i = 0; i < length; i++) {
+                secret[i] = secretCode.charAt(i);
             }
             do {
                 int cows = 0;
                 bulls = 0;
-                System.out.printf("Turn %d. Answer:\n", turn++);
-                int input = scanner.nextInt();
-                for (int i = length - 1; i > -1; i--) {
-                    answer[i] = input % 10;
-                    input /= 10;
+                System.out.println("Turn " + turn++ + ". Answer:");
+                String input = scanner.next();
+                for (int i = 0; i < length; i++) {
+                    answer[i] = input.charAt(i);
                 }
                 for (int i = 0; i < length; i++) {
                     for (int j = 0; j < length; j++) {
@@ -57,19 +56,13 @@ public class Main {
     }
 
 
-    public static int secretCode(int length) {
+    public static String secretCode(int length){
+        Random random = new Random();
         String result = new String("");
         do {
-            String pseudoRandom = String.valueOf((long) System.nanoTime()).replaceAll("0*$", "");
-            for (int i = pseudoRandom.length() - 1; i >= 0; i--) {
-                if (result.indexOf(pseudoRandom.charAt(i)) < 0) {
-                    result += pseudoRandom.charAt(i);
-                }
-                if (result.length() == length) {
-                    break;
-                }
-            }
+            char ch = (char) (random.nextInt(10) + '0');
+            result = result.indexOf(ch) < 0 ? result + ch : result;
         } while (result.length() < length);
-        return Integer.parseInt(result);
+        return result;
     }
 }
